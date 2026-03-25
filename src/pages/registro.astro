@@ -1,0 +1,16 @@
+---
+import PublicLayout from '@/layouts/PublicLayout.astro';
+import DonationForm from '@/landing/DonationForm'
+const robots = ["index", "follow"];
+const title = "CITE | 2025";
+const description = "Programa de voluntariado de la UNS enfocado en resiliencia urbana y gestión de riesgos.";
+const keywords = ["CITE", "voluntariado", "UNS", "resiliencia urbana", "gestión de riesgos"];
+const url = "https://cite.vercel.app";
+const imageOG = "/logos/CITE_Logotipo%20principal-SF-04.webp";
+const imagetwt = "/logos/CITE_Logotipo%20principal-SF-04.webp";
+---
+
+<PublicLayout {robots} {title} {description} {keywords} {url} {imageOG} {imagetwt}>
+	<!-- <DonationForm client:load/> -->
+	 El registro cerró. Muchas gracias por participar del CITE 2025
+</PublicLayout>
