@@ -121,86 +121,109 @@ h1, h2, h3, h4, h5, h6,
 }
 
 :root {
-  --wave-color: #BDBF65; /* Actualizado a Verde Tomatillo */
   --radius: 0.625rem;
   
-  /* Nuevos colores */
-  --background: #F8F7F3; /* COLOR LUZ - Base principal */
-  --foreground: #2C312D; /* COLOR SOMBRA - Texto principal */
+  /* Paleta Azul Marino + Blanco + Negro Plateado */
+  --background: #FFFFFF; /* Blanco puro para fondo */
+  --foreground: #0A1927; /* Azul marino oscuro para texto principal */
   
-  /* Actualizaciones con los nuevos colores */
+  /* Colores principales */
+  --primary: #0A1927; /* Azul marino oscuro - Color principal */
+  --primary-foreground: #FFFFFF; /* Blanco para texto sobre fondo principal */
+  
+  --secondary: #2C3E50; /* Azul marino medio - Secundario */
+  --secondary-foreground: #FFFFFF; /* Blanco */
+  
+  --accent: #4A90E2; /* Azul brillante moderno - Acento */
+  --accent-foreground: #FFFFFF; /* Blanco */
+  
+  /* Cards y elementos */
   --card: #FFFFFF;
-  --card-foreground: #2C312D;
+  --card-foreground: #0A1927;
   --popover: #FFFFFF;
-  --popover-foreground: #2C312D;
-  --primary: #BDBF65; /* VERDE TOMATILLO - Color principal */
-  --primary-foreground: #2C312D; /* Texto oscuro sobre fondo claro */
-  --secondary: #5BBDD3; /* ACENTO FRÍO */
-  --secondary-foreground: #2C312D;
-  --muted: #E5E4E0;
-  --muted-foreground: #4A4F4B;
-  --accent: #D79259; /* ACENTO CÁLIDO */
-  --accent-foreground: #2C312D;
-  --destructive: #DC2626;
-  --border: rgba(44, 49, 45, 0.15); /* Sombra con opacidad */
-  --input: rgba(44, 49, 45, 0.1);
-  --ring: #BDBF65; /* Verde Tomatillo para focus */
+  --popover-foreground: #0A1927;
   
-  /* Charts manteniendo la armonía con la nueva paleta */
-  --chart-1: #BDBF65; /* Verde Tomatillo */
-  --chart-2: #5BBDD3; /* Acento Frío */
-  --chart-3: #D79259; /* Acento Cálido */
-  --chart-4: #9E5BD3; /* Acento Vibrante */
-  --chart-5: #2C312D; /* Color Sombra */
+  /* Estados y fondos */
+  --muted: #F5F7FA; /* Gris muy claro para fondos secundarios */
+  --muted-foreground: #4A5568; /* Gris azulado para texto secundario */
   
-  /* Sidebar con la nueva paleta */
+  /* Destructivo */
+  --destructive: #E53E3E;
+  --destructive-foreground: #FFFFFF;
+  
+  /* Bordes e inputs */
+  --border: rgba(10, 25, 39, 0.12); /* Azul marino con opacidad */
+  --input: rgba(10, 25, 39, 0.08);
+  --ring: #4A90E2; /* Azul brillante para focus */
+  
+  /* Charts - gradiente de azules */
+  --chart-1: #0A1927; /* Azul marino oscuro */
+  --chart-2: #1E3A5F; /* Azul marino medio */
+  --chart-3: #2C3E50; /* Azul marino claro */
+  --chart-4: #4A90E2; /* Azul brillante */
+  --chart-5: #5A9CE5; /* Azul más claro */
+  
+  /* Sidebar */
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #2C312D;
-  --sidebar-primary: #BDBF65; /* Verde Tomatillo */
-  --sidebar-primary-foreground: #2C312D;
-  --sidebar-accent: #F0EFEA;
-  --sidebar-accent-foreground: #2C312D;
-  --sidebar-border: rgba(44, 49, 45, 0.1);
-  --sidebar-ring: #BDBF65;
+  --sidebar-foreground: #0A1927;
+  --sidebar-primary: #0A1927;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F5F7FA;
+  --sidebar-accent-foreground: #0A1927;
+  --sidebar-border: rgba(10, 25, 39, 0.1);
+  --sidebar-ring: #4A90E2;
 }
 
 .dark {
-  /* Modo oscuro adaptado de la nueva paleta */
-  --background: #1A1D1A; /* Versión más oscura de Sombra */
-  --foreground: #1A1D1A;; /* Luz para texto */
-  --card: #2C312D; /* Color Sombra */
-  --card-foreground: #F8F7F3;
-  --popover: #2C312D;
-  --popover-foreground: #F8F7F3;
-  --primary: #BDBF65; /* Verde Tomatillo se mantiene */
-  --primary-foreground: #1A1D1A;
-  --secondary: #3D8A9E; /* Versión más oscura del acento frío */
-  --secondary-foreground: #F8F7F3;
-  --muted: #353A36;
-  --muted-foreground: #A0A8A3;
-  --accent: #B56E3F; /* Versión más oscura del acento cálido */
-  --accent-foreground: #F8F7F3;
-  --destructive: #B91C1C;
-  --border: rgba(248, 247, 243, 0.15); /* Luz con opacidad */
-  --input: rgba(248, 247, 243, 0.1);
-  --ring: #BDBF65;
+  /* Modo oscuro - Basado en azul marino profundo */
+  --background: #0A1927; /* Azul marino oscuro como fondo */
+  --foreground: #FFFFFF; /* Blanco para texto */
+  
+  /* Colores principales en modo oscuro */
+  --primary: #4A90E2; /* Azul brillante como primario */
+  --primary-foreground: #0A1927; /* Azul marino oscuro para texto */
+  
+  --secondary: #1E3A5F; /* Azul marino medio */
+  --secondary-foreground: #FFFFFF;
+  
+  --accent: #5A9CE5; /* Azul más claro */
+  --accent-foreground: #0A1927;
+  
+  /* Cards en modo oscuro */
+  --card: #0F2A3A; /* Azul marino ligeramente más claro */
+  --card-foreground: #FFFFFF;
+  --popover: #0F2A3A;
+  --popover-foreground: #FFFFFF;
+  
+  /* Estados en modo oscuro */
+  --muted: #1E3A5F; /* Azul marino medio */
+  --muted-foreground: #B0C4DE; /* Azul grisáceo claro */
+  
+  /* Destructivo */
+  --destructive: #E53E3E;
+  --destructive-foreground: #FFFFFF;
+  
+  /* Bordes e inputs en modo oscuro */
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #4A90E2;
   
   /* Charts en modo oscuro */
-  --chart-1: #BDBF65;
-  --chart-2: #5BBDD3;
-  --chart-3: #D79259;
-  --chart-4: #9E5BD3;
-  --chart-5: #F8F7F3;
+  --chart-1: #4A90E2;
+  --chart-2: #5A9CE5;
+  --chart-3: #6BA8E8;
+  --chart-4: #1E3A5F;
+  --chart-5: #0F2A3A;
   
   /* Sidebar en modo oscuro */
-  --sidebar: #1A1D1A;
-  --sidebar-foreground: #F8F7F3;
-  --sidebar-primary: #BDBF65;
-  --sidebar-primary-foreground: #1A1D1A;
-  --sidebar-accent: #2C312D;
-  --sidebar-accent-foreground: #F8F7F3;
-  --sidebar-border: rgba(248, 247, 243, 0.1);
-  --sidebar-ring: #BDBF65;
+  --sidebar: #0A1927;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #4A90E2;
+  --sidebar-primary-foreground: #0A1927;
+  --sidebar-accent: #0F2A3A;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #4A90E2;
 }
 
 @layer base {
@@ -236,5 +259,33 @@ h1, h2, h3, h4, h5, h6,
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+  
+  /* Animaciones personalizadas */
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+  
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+  
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animation-delay-4000 {
+    animation-delay: 4s;
   }
 }

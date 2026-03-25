@@ -1,12 +1,11 @@
+// src/pages/Landing.tsx
 import React, { useState, useEffect } from "react";
 import { ChevronUp } from "lucide-react";
 import HeroSection from "@/landing/sections/HeroSection";
-import NosotrosSection from "@/landing/sections/NosotrosSection";
-import LineasAccionSection from "@/landing/sections/LineasAccionSection";
-import ImpactoSection from "@/landing/sections/ImpactoSection";
-import ComunidadSection from "@/landing/sections/ComunidadSection";
-import ContactoSection from "@/landing/sections/ContactoSection";
-import AliadosSection from "@/landing/sections/AliadosSection";
+{/*import ExperienceSection from "@/landing/sections/ExperienceSection";
+import ProjectsSection from "@/landing/sections/ProjectsSection";
+import AboutSection from "@/landing/sections/AboutSection";*/}
+import ContactSection from "@/landing/sections/ContactSection";
 import Navbar from "@/components/core/Navbar";
 import Footer from "@/components/core/Footer";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,36 +26,30 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F7F3] text-[#2C312D]">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar scrollToTop={scrollToTop} />
 
-      <div id="hero">
-        <HeroSection />
-      </div>
+      <main>
+        <section id="hero">
+          <HeroSection />
+        </section>
+{/*
+        <section id="experience">
+          <ExperienceSection />
+        </section>
 
-      <div id="nosotros">
-        <NosotrosSection />
-      </div>
+        <section id="projects">
+          <ProjectsSection />
+        </section>
 
-      <div id="lineas-accion">
-        <LineasAccionSection />
-      </div>
-
-      <div id="impacto">
-        <ImpactoSection />
-      </div>
-
-      <div id="comunidad">
-        <ComunidadSection />
-      </div>
-
-      <div id="contacto">
-        <ContactoSection />
-      </div>
-
-      <div id="aliados">
-        <AliadosSection />
-      </div>
+        <section id="about">
+          <AboutSection />
+        </section>
+*/}
+        <section id="contact">
+          <ContactSection />
+        </section>
+      </main>
 
       <Footer />
 
@@ -67,7 +60,7 @@ export default function Landing() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
             onClick={scrollToTop}
-            className="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-[#BDBF65] text-[#2C312D] shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 flex items-center justify-center z-40"
+            className="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 flex items-center justify-center z-40"
           >
             <ChevronUp className="h-6 w-6" />
           </motion.button>
