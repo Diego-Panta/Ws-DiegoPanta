@@ -1,15 +1,17 @@
 ---
+// src/pages/index.astro
 import PublicLayout from '@/layouts/PublicLayout.astro';
 import Landing from '@/landing/Landing'
+
 const robots = ["index", "follow"];
-const title = "CITE | 2025";
-const description = "Programa de voluntariado de la UNS enfocado en resiliencia urbana y gestión de riesgos.";
-const keywords = ["CITE", "voluntariado", "UNS", "resiliencia urbana", "gestión de riesgos"];
-const url = "https://cite.vercel.app";
-const imageOG = "/logos/CITE_Logotipo%20principal-SF-04.webp";
-const imagetwt = "/logos/CITE_Logotipo%20principal-SF-04.webp";
+const title = "Diego Panta | Desarrollador Fullstack & Machine Learning";
+const description = "Ingeniero de Sistemas especializado en desarrollo fullstack, machine learning e inteligencia artificial. +1 año transformando ideas en soluciones digitales escalables.";
+const keywords = ["Diego Panta", "desarrollador fullstack", "machine learning", "ingeniero de sistemas", "React", "Spring Boot", "Python", "TensorFlow", "Laravel", "portafolio"];
+const url = "https://diego-panta.vercel.app";
+const imageOG = "/images/profile-og.jpg";
+const imagetwt = "/images/profile-og.jpg";
 ---
 
 <PublicLayout {robots} {title} {description} {keywords} {url} {imageOG} {imagetwt}>
-	<Landing client:load/>
+	<Landing client:load />
 </PublicLayout>

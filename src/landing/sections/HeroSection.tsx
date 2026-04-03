@@ -189,7 +189,7 @@ export default function HeroSection() {
               <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl shadow-primary/20 border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5">
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-40" />
                 <img
-                  src="/images/profile.jpg"
+                  src="/logos/logo_Diego_0_blue.png"
                   alt="Diego Panta - Desarrollador Fullstack"
                   className="w-full h-full object-cover"
                   loading="eager"

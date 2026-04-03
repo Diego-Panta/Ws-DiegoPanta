@@ -1,10 +1,10 @@
-// src/pages/Landing.tsx
+// src/landing/Landing.tsx
 import React, { useState, useEffect } from "react";
 import { ChevronUp } from "lucide-react";
 import HeroSection from "@/landing/sections/HeroSection";
-{/*import ExperienceSection from "@/landing/sections/ExperienceSection";
+import ExperienceSection from "@/landing/sections/ExperienceSection";
 import ProjectsSection from "@/landing/sections/ProjectsSection";
-import AboutSection from "@/landing/sections/AboutSection";*/}
+import AboutSection from "@/landing/sections/AboutSection";
 import ContactSection from "@/landing/sections/ContactSection";
 import Navbar from "@/components/core/Navbar";
 import Footer from "@/components/core/Footer";
@@ -23,7 +23,26 @@ export default function Landing() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+    window.history.pushState({}, "", window.location.pathname);
   };
+
+  // Manejar hash en la URL al cargar la página
+  useEffect(() => {
+    // Verificar si hay un hash en la URL
+    const hash = window.location.hash;
+    if (hash && hash !== "#") {
+      const id = hash.replace("#", "");
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          const offset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - offset;
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }, 100);
+      }
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -33,7 +52,7 @@ export default function Landing() {
         <section id="hero">
           <HeroSection />
         </section>
-{/*
+
         <section id="experience">
           <ExperienceSection />
         </section>
@@ -45,7 +64,7 @@ export default function Landing() {
         <section id="about">
           <AboutSection />
         </section>
-*/}
+
         <section id="contact">
           <ContactSection />
         </section>

@@ -1,5 +1,5 @@
 // src/components/Footer.tsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Heart,
   Mail,
@@ -14,18 +14,55 @@ import {
 } from "lucide-react";
 
 export default function Footer() {
+  const [currentPath, setCurrentPath] = useState("");
+
+  useEffect(() => {
+    setCurrentPath(window.location.pathname);
+  }, []);
+
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (currentPath !== "/") {
+      window.location.href = "/";
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.history.pushState({}, "", window.location.pathname);
+    }
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    
+    // Si estamos en la página de certificaciones, primero navegamos al inicio
+    if (currentPath !== "/") {
+      window.location.href = `/${href}`;
+      return;
+    }
+    
+    // Si ya estamos en la página principal, hacemos scroll suave
+    const id = href.replace("#", "");
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+      
+      window.history.pushState({}, "", href);
+    }
   };
 
   const currentYear = new Date().getFullYear();
 
   const navLinks = [
-    { label: "Inicio", href: "#hero" },
-    { label: "Experiencia", href: "#experience" },
-    { label: "Proyectos", href: "#projects" },
-    { label: "Sobre mí", href: "#about" },
-    { label: "Contacto", href: "#contact" }
+    { label: "Inicio", href: "#hero", id: "hero" },
+    { label: "Experiencia", href: "#experience", id: "experience" },
+    { label: "Proyectos", href: "#projects", id: "projects" },
+    { label: "Sobre mí", href: "#about", id: "about" },
+    { label: "Contacto", href: "#contact", id: "contact" }
   ];
 
   return (
@@ -66,7 +103,8 @@ export default function Footer() {
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-1 group"
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-1 group cursor-pointer"
                   >
                     <ArrowUpRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.label}
@@ -151,7 +189,7 @@ export default function Footer() {
             <p className="text-muted-foreground text-sm">
               © {currentYear} Diego Panta. Todos los derechos reservados.
             </p>
-            <p className="text-center md:text-right text-muted-foreground/60 text-xs ">
+            <p className="text-center md:text-right text-muted-foreground/60 text-xs">
               Construyendo soluciones digitales con pasión y código limpio
             </p>
           </div>

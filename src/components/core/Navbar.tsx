@@ -1,5 +1,5 @@
 // src/components/Navbar.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Github, Linkedin, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,20 +11,81 @@ interface NavbarProps {
 
 export default function Navbar({ scrollToTop }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
+  const [currentPath, setCurrentPath] = useState("");
+
+  useEffect(() => {
+    setCurrentPath(window.location.pathname);
+  }, []);
 
   const navLinks = [
-    { label: "Inicio", href: "#hero" },
-    { label: "Experiencia", href: "#experience" },
-    { label: "Proyectos", href: "#projects" },
-    { label: "Sobre mí", href: "#about" },
-    { label: "Contacto", href: "#contact" }
+    { label: "Inicio", href: "#hero", id: "hero", path: "/" },
+    { label: "Experiencia", href: "#experience", id: "experience", path: "/" },
+    { label: "Proyectos", href: "#projects", id: "projects", path: "/" },
+    { label: "Sobre mí", href: "#about", id: "about", path: "/" },
+    { label: "Contacto", href: "#contact", id: "contact", path: "/" }
   ];
 
-  const handleNavClick = (href: string) => {
-    const element = document.getElementById(href.substring(1));
+  // Detectar sección activa solo en la página principal
+  useEffect(() => {
+    if (currentPath !== "/") return;
+
+    const handleScroll = () => {
+      const sections = navLinks.map(link => link.id);
+      const scrollPosition = window.scrollY + 100;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [currentPath]);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLButtonElement>, href: string, id: string, targetPath: string) => {
+    e.preventDefault();
+    
+    // Si estamos en la página de certificaciones, primero navegamos al inicio
+    if (currentPath !== "/") {
+      window.location.href = `/${href}`;
+      return;
+    }
+    
+    // Si ya estamos en la página principal, hacemos scroll suave
+    const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+      
+      window.history.pushState({}, "", href);
+      setActiveSection(id);
       setIsMenuOpen(false);
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (currentPath !== "/") {
+      window.location.href = "/";
+    } else {
+      scrollToTop();
+      window.history.pushState({}, "", "/");
+      setActiveSection("hero");
     }
   };
 
@@ -35,7 +96,7 @@ export default function Navbar({ scrollToTop }: NavbarProps) {
           {/* Logo / Nombre */}
           <div 
             className="flex items-center cursor-pointer group"
-            onClick={scrollToTop}
+            onClick={handleLogoClick}
           >
             <span className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Diego Panta
@@ -47,8 +108,12 @@ export default function Navbar({ scrollToTop }: NavbarProps) {
             {navLinks.map((link) => (
               <button
                 key={link.href}
-                onClick={() => handleNavClick(link.href)}
-                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors"
+                onClick={(e) => handleNavClick(e, link.href, link.id, link.path)}
+                className={`text-sm font-medium transition-colors ${
+                  currentPath === "/" && activeSection === link.id
+                    ? "text-primary border-b-2 border-primary pb-1"
+                    : "text-foreground/70 hover:text-primary"
+                }`}
               >
                 {link.label}
               </button>
@@ -76,7 +141,7 @@ export default function Navbar({ scrollToTop }: NavbarProps) {
             </Button>
             <Button
               className="bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 hover:scale-105"
-              onClick={() => handleNavClick("#contact")}
+              onClick={(e) => handleNavClick(e, "#contact", "contact", "/")}
             >
               <Mail className="mr-2 h-4 w-4" />
               Contáctame
@@ -113,8 +178,12 @@ export default function Navbar({ scrollToTop }: NavbarProps) {
               {navLinks.map((link) => (
                 <button
                   key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="block w-full text-left py-2 text-foreground/70 hover:text-primary transition-colors font-medium"
+                  onClick={(e) => handleNavClick(e, link.href, link.id, link.path)}
+                  className={`block w-full text-left py-2 transition-colors font-medium ${
+                    currentPath === "/" && activeSection === link.id
+                      ? "text-primary"
+                      : "text-foreground/70 hover:text-primary"
+                  }`}
                 >
                   {link.label}
                 </button>
@@ -143,7 +212,7 @@ export default function Navbar({ scrollToTop }: NavbarProps) {
                 
                 <Button
                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                  onClick={() => handleNavClick("#contact")}
+                  onClick={(e) => handleNavClick(e, "#contact", "contact", "/")}
                 >
                   <Mail className="mr-2 h-4 w-4" />
                   Contáctame

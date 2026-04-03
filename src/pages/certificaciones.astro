@@ -1,0 +1,17 @@
+---
+// src/pages/certificaciones.astro
+import PublicLayout from '@/layouts/PublicLayout.astro';
+import CertificationsPage from '@/landing/Certifications';
+
+const robots = ["index", "follow"];
+const title = "Certificaciones | Diego Panta";
+const description = "Portafolio de certificaciones académicas y profesionales en Machine Learning, Desarrollo Fullstack, Ciberseguridad y más.";
+const keywords = ["certificaciones", "Diego Panta", "Machine Learning", "Fullstack", "Python", "Scrum", "Ethical Hacking"];
+const url = "https://diego-panta.vercel.app/certificaciones";
+const imageOG = "/images/og-certificaciones.jpg";
+const imagetwt = "/images/og-certificaciones.jpg";
+---
+
+<PublicLayout {robots} {title} {description} {keywords} {url} {imageOG} {imagetwt}>
+	<CertificationsPage client:load />
+</PublicLayout>
