@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, MessageCircle, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ContactSection() {
@@ -14,42 +14,40 @@ export default function ContactSection() {
     telefono: "",
     mensaje: ""
   });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdEjemplo/formResponse";
-  const FIELD_IDS = {
-    nombres: "entry.1234567890",
-    correo: "entry.1234567891",
-    telefono: "entry.1234567892",
-    mensaje: "entry.1234567893"
-  };
+  // Obtener Access Key de variables de entorno
+  const WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    
-    if (name === 'nombres') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value.toUpperCase()
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'nombres' ? value.toUpperCase() : value
+    }));
   };
 
-  const validateForm = () => {
-    if (!formData.nombres.trim() || !formData.correo.trim() || !formData.mensaje.trim()) {
-      alert("Por favor completa todos los campos obligatorios");
+  const validateForm = (): boolean => {
+    if (!formData.nombres.trim()) {
+      setErrorMessage("Por favor ingresa tu nombre");
       return false;
     }
 
-    const emailPattern = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
-    if (!emailPattern.test(formData.correo)) {
-      alert("Por favor ingresa un correo electrónico válido");
+    if (!formData.correo.trim()) {
+      setErrorMessage("Por favor ingresa tu correo electrónico");
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+    if (!emailRegex.test(formData.correo)) {
+      setErrorMessage("Por favor ingresa un correo electrónico válido");
+      return false;
+    }
+
+    if (!formData.mensaje.trim()) {
+      setErrorMessage("Por favor ingresa tu mensaje");
       return false;
     }
 
@@ -58,46 +56,76 @@ export default function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
+    // Verificar que la Access Key existe
+    if (!WEB3FORMS_ACCESS_KEY || WEB3FORMS_ACCESS_KEY === "") {
+      setSubmitStatus("error");
+      setErrorMessage("Error de configuración: Access Key no encontrada");
+      return;
+    }
+
     setIsSubmitting(true);
+    setSubmitStatus("idle");
+    setErrorMessage("");
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append(FIELD_IDS.nombres, formData.nombres);
-      formDataToSend.append(FIELD_IDS.correo, formData.correo);
-      formDataToSend.append(FIELD_IDS.telefono, formData.telefono);
-      formDataToSend.append(FIELD_IDS.mensaje, formData.mensaje);
+      const payload = {
+        access_key: WEB3FORMS_ACCESS_KEY,
+        name: formData.nombres,
+        email: formData.correo,
+        phone: formData.telefono || "No especificado",
+        message: formData.mensaje,
+        subject: `Portafolio - Mensaje de ${formData.nombres}`,
+        from_name: formData.nombres,
+        replyto: formData.correo,
+        botcheck: false,
+        redirect: false
+      };
 
-      await fetch(GOOGLE_FORM_ACTION, {
-        method: "POST",
-        body: formDataToSend,
-        mode: "no-cors"
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
       });
 
-      setFormData({
-        nombres: "",
-        correo: "",
-        telefono: "",
-        mensaje: ""
-      });
+      const result = await response.json();
 
-      alert("¡Mensaje enviado correctamente! Te contactaré pronto.");
-
+      if (result.success) {
+        setSubmitStatus("success");
+        setFormData({
+          nombres: "",
+          correo: "",
+          telefono: "",
+          mensaje: ""
+        });
+        setTimeout(() => {
+          setSubmitStatus("idle");
+        }, 5000);
+      } else {
+        throw new Error(result.message || 'Error al enviar');
+      }
     } catch (error) {
-      console.error("Error al enviar el formulario:", error);
-      alert("Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.");
+      console.error('Error detallado:', error);
+      setSubmitStatus("error");
+      setErrorMessage("Error al enviar el mensaje. Por favor, intenta nuevamente o usa WhatsApp.");
+      setTimeout(() => {
+        setSubmitStatus("idle");
+        setErrorMessage("");
+      }, 5000);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleSendWhatsApp = () => {
-    const message = encodeURIComponent(`Hola Diego, me interesa contactarte sobre tus servicios. Mi nombre es ${formData.nombres || 'usuario'}`);
-    window.open(`https://wa.me/5194802461?text=${message}`, '_blank');
+    window.open(`https://wa.me/51914036960?text=Hola%20Diego,%20me%20interesa%20contactarte%20sobre%20tus%20servicios.`, '_blank');
   };
 
   const contactInfo = [
@@ -110,8 +138,8 @@ export default function ContactSection() {
     {
       icon: Phone,
       label: "WhatsApp",
-      value: "(+51) 74802461",
-      link: "https://wa.me/5194802461"
+      value: "(+51) 914036960",
+      link: "https://wa.me/51914036960"
     },
     {
       icon: MapPin,
@@ -150,7 +178,7 @@ export default function ContactSection() {
           </h2>
 
           <p className="text-lg text-muted-foreground leading-relaxed">
-            Estoy siempre abierto a nuevas oportunidades y colaboraciones. 
+            Estoy siempre abierto a nuevas oportunidades y colaboraciones.
             <span className="text-primary font-semibold"> ¡Hablemos y hagamos realidad tus ideas!</span>
           </p>
         </motion.div>
@@ -170,6 +198,20 @@ export default function ContactSection() {
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {submitStatus === "success" && (
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-green-500/10 text-green-500 text-sm border border-green-500/20">
+                      <CheckCircle className="h-4 w-4 shrink-0" />
+                      <span>¡Mensaje enviado correctamente! Te responderé pronto.</span>
+                    </div>
+                  )}
+
+                  {submitStatus === "error" && (
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm border border-destructive/20">
+                      <AlertCircle className="h-4 w-4 shrink-0" />
+                      <span>{errorMessage}</span>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <label className="text-sm text-muted-foreground font-medium">
                       Nombres Completos <span className="text-destructive">*</span>
@@ -180,6 +222,7 @@ export default function ContactSection() {
                       onChange={handleInputChange}
                       placeholder="DIEGO PANTA"
                       className="bg-background border-border text-foreground placeholder:text-muted-foreground/40 focus:border-primary focus:ring-primary/20"
+                      disabled={isSubmitting}
                       required
                     />
                   </div>
@@ -196,6 +239,7 @@ export default function ContactSection() {
                         onChange={handleInputChange}
                         placeholder="ejemplo@email.com"
                         className="bg-background border-border text-foreground placeholder:text-muted-foreground/40 focus:border-primary focus:ring-primary/20"
+                        disabled={isSubmitting}
                         required
                       />
                     </div>
@@ -210,6 +254,7 @@ export default function ContactSection() {
                         onChange={handleInputChange}
                         placeholder="+51 999 999 999"
                         className="bg-background border-border text-foreground placeholder:text-muted-foreground/40 focus:border-primary focus:ring-primary/20"
+                        disabled={isSubmitting}
                       />
                     </div>
                   </div>
@@ -225,32 +270,29 @@ export default function ContactSection() {
                       placeholder="Cuéntame sobre tu proyecto, idea o propuesta..."
                       rows={5}
                       className="bg-background border-border text-foreground placeholder:text-muted-foreground/40 focus:border-primary focus:ring-primary/20 resize-none"
+                      disabled={isSubmitting}
                       required
                     />
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Button 
-                      type="submit"
-                      size="lg"
-                      disabled={isSubmitting}
-                      className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <Send className="mr-2 h-5 w-5" />
-                      {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
-                    </Button>
-                    
-                    <Button 
-                      type="button"
-                      size="lg"
-                      variant="outline"
-                      onClick={handleSendWhatsApp}
-                      className="flex-1 border-2 border-primary/30 bg-transparent hover:bg-primary/10 text-foreground font-bold"
-                    >
-                      <MessageCircle className="mr-2 h-5 w-5" />
-                      Contactar por WhatsApp
-                    </Button>
-                  </div>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="mr-2 h-5 w-5" />
+                        Enviar Mensaje
+                      </>
+                    )}
+                  </Button>
                 </form>
               </CardContent>
             </Card>
@@ -277,7 +319,7 @@ export default function ContactSection() {
                     <div className="flex-1 min-w-0">
                       <div className="text-sm text-muted-foreground">{item.label}</div>
                       {item.link ? (
-                        <a 
+                        <a
                           href={item.link}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -293,6 +335,14 @@ export default function ContactSection() {
                 ))}
               </CardContent>
             </Card>
+
+            <Button
+              onClick={handleSendWhatsApp}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-6 text-lg shadow-lg"
+            >
+              <MessageCircle className="mr-2 h-5 w-5" />
+              Contáctame por WhatsApp
+            </Button>
 
             <Card className="bg-card border-border">
               <CardHeader>
